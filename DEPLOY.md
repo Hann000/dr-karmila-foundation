@@ -104,7 +104,8 @@ Proyek sudah disiapkan untuk Vercel (`vercel.json` + deteksi otomatis base path)
 5. Klik **Deploy**. Tunggu build selesai.
 6. Situs akan live di **`https://nama-proyek.vercel.app`** (bisa diganti nama di Project Settings).
 
-**Catatan:** Di Vercel, base path otomatis `/` (root), jadi tidak perlu set env. Kalau nanti pakai domain sendiri, tambahkan di Project → Settings → Domains.
+**Jika asset 404 (mis. `/dr-karmila-foundation/assets/...` not found):**  
+Di Vercel → Project → **Settings** → **Environment Variables** → tambah **`BASE_PATH`** = **`/`** (Production). Lalu **Redeploy** (Deployments → ⋮ pada deploy terakhir → Redeploy).
 
 ---
 

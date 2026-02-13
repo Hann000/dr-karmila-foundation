@@ -4,8 +4,8 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   logLevel: 'error', // Hanya tampilkan error
-  // Vercel set VERCEL=1 → base '/'. GitHub Pages → base '/dr-karmila-foundation/'. Dev → '/'
-  base: process.env.VERCEL ? '/' : (process.env.NODE_ENV === 'production' ? '/dr-karmila-foundation/' : '/'),
+  // Vercel: base '/'. GitHub Pages: base '/dr-karmila-foundation/'. Bisa paksa pakai env BASE_PATH
+  base: process.env.BASE_PATH || (process.env.VERCEL === '1' || process.env.VERCEL_URL ? '/' : (process.env.NODE_ENV === 'production' ? '/dr-karmila-foundation/' : '/')),
   plugins: [
     react(),
   ],

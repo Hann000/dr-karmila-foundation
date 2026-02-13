@@ -43,13 +43,29 @@ git push -u origin main
 
 ---
 
-## 2. Aktifkan GitHub Pages
+## 2. Aktifkan GitHub Pages (pilih salah satu)
 
-1. Di repo GitHub, buka **Settings** → **Pages**.
-2. Di **Source**, pilih **GitHub Actions** (bukan "Deploy from a branch").
-3. Simpan. Tidak perlu mengisi branch.
+### Opsi A – Deploy dari branch `gh-pages` (disarankan jika Opsi B error)
 
-Setiap kali Anda push ke branch `main`, workflow akan otomatis build dan deploy.  
+Workflow **"Build and deploy to gh-pages branch"** akan build proyek lalu push hasilnya ke branch `gh-pages`.
+
+1. Push kode (workflow akan jalan dan mengisi branch `gh-pages`).
+2. Di repo → **Settings** → **Pages**.
+3. **Source** pilih **"Deploy from a branch"**.
+4. **Branch** pilih **`gh-pages`** (bukan `main`), folder **`/ (root)`**.
+5. **Save**.
+
+Setelah itu, situs dilayani dari **hasil build** di branch `gh-pages`, bukan dari kode sumber.
+
+---
+
+### Opsi B – Deploy dari GitHub Actions
+
+1. Di repo → **Settings** → **Pages**.
+2. **Source** pilih **"GitHub Actions"**.
+3. Simpan. Pastikan workflow **"Deploy to GitHub Pages"** di tab Actions berhasil (hijau).
+
+---
 
 **URL situs:** ganti `Hann000` dengan username GitHub Anda  
 → **`https://Hann000.github.io/dr-karmila-foundation/`**
@@ -58,7 +74,41 @@ Setiap kali Anda push ke branch `main`, workflow akan otomatis build dan deploy.
 
 ---
 
-## 2.1 Jika muncul 404 "There isn't a GitHub Pages site here"
+## 2.1 Jika halaman putih / error GET /src/main.jsx 404
+
+Artinya GitHub Pages **bukan** pakai hasil build, tapi kode sumber di branch `main`.
+
+**Solusi (pilih satu):**
+
+- **Pakai Opsi A (branch gh-pages):**  
+  Settings → Pages → Source pilih **"Deploy from a branch"** → Branch: **gh-pages**, Folder: **/ (root)** → Save.  
+  Lalu push sekali ke `main` agar workflow **"Build and deploy to gh-pages branch"** jalan dan mengisi branch `gh-pages`. Setelah workflow hijau, buka lagi URL + **Ctrl+F5**.
+
+- **Atau pakai Opsi B (GitHub Actions):**  
+  Source pilih **"GitHub Actions"**. Pastikan workflow **"Deploy to GitHub Pages"** di tab Actions **berhasil (hijau)**. Jika merah, perbaiki error di log lalu Re-run. Setelah deploy sukses, buka URL + **Ctrl+F5**.
+
+---
+
+## 2.1b Deploy ke Vercel
+
+Proyek sudah disiapkan untuk Vercel (`vercel.json` + deteksi otomatis base path).
+
+1. Buka **[vercel.com](https://vercel.com)** dan login (bisa pakai akun GitHub).
+2. Klik **Add New…** → **Project**.
+3. **Import** repo **dr-karmila-foundation** dari GitHub (atau pilih repo yang dipakai).
+4. Vercel akan mendeteksi Vite:
+   - **Framework Preset:** Vite  
+   - **Build Command:** `npm run build`  
+   - **Output Directory:** `dist`  
+   (Biasanya sudah terisi dari `vercel.json`; jika belum, isi seperti di atas.)
+5. Klik **Deploy**. Tunggu build selesai.
+6. Situs akan live di **`https://nama-proyek.vercel.app`** (bisa diganti nama di Project Settings).
+
+**Catatan:** Di Vercel, base path otomatis `/` (root), jadi tidak perlu set env. Kalau nanti pakai domain sendiri, tambahkan di Project → Settings → Domains.
+
+---
+
+## 2.2 Jika muncul 404 "There isn't a GitHub Pages site here"
 
 1. **Pakai username asli di URL**  
    Jangan pakai literal `YOUR_USERNAME`. Contoh: `https://Hann000.github.io/dr-karmila-foundation/` (ganti Hann000 jika username Anda beda).

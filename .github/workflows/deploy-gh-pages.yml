@@ -1,0 +1,36 @@
+# Deploy hasil build ke branch gh-pages (alternatif: pakai branch, bukan artifact)
+# Setelah push: di repo Settings → Pages → Source pilih "Deploy from a branch" → branch: gh-pages, folder: / (root)
+name: Build and deploy to gh-pages branch
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Copy index to 404 (SPA routing)
+        run: cp dist/index.html dist/404.html
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true

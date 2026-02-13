@@ -27,7 +27,7 @@ git add .
 git commit -m "Initial commit: DR. KARMILA Foundation portal"
 
 # Ganti YOUR_USERNAME dengan username GitHub Anda
-git remote add origin https://github.com/YOUR_USERNAME/dr-karmila-foundation.git
+git remote add origin https://github.com/Hann000/dr-karmila-foundation.git
 
 # Push ke branch main
 git branch -M main
@@ -50,9 +50,31 @@ git push -u origin main
 3. Simpan. Tidak perlu mengisi branch.
 
 Setiap kali Anda push ke branch `main`, workflow akan otomatis build dan deploy.  
-URL situs nanti: **`https://YOUR_USERNAME.github.io/dr-karmila-foundation/`**
+
+**URL situs:** ganti `Hann000` dengan username GitHub Anda  
+→ **`https://Hann000.github.io/dr-karmila-foundation/`**
 
 (Jika nama repo Anda berbeda, ganti `dr-karmila-foundation` di URL dan di `base` di `vite.config.js`.)
+
+---
+
+## 2.1 Jika muncul 404 "There isn't a GitHub Pages site here"
+
+1. **Pakai username asli di URL**  
+   Jangan pakai literal `YOUR_USERNAME`. Contoh: `https://Hann000.github.io/dr-karmila-foundation/` (ganti Hann000 jika username Anda beda).
+
+2. **Source Pages harus "GitHub Actions"**  
+   Repo → **Settings** → **Pages** → **Build and deployment** → **Source** pilih **GitHub Actions** (bukan "Deploy from a branch"). Simpan.
+
+3. **Cek workflow sudah jalan**  
+   Repo → tab **Actions**. Pastikan workflow **"Deploy to GitHub Pages"** ada dan statusnya **hijau (berhasil)**. Kalau merah, klik lalu baca error dan perbaiki.
+
+4. **Jalankan deploy sekali**  
+   Setelah Source diubah ke GitHub Actions, push kosong atau re-run workflow:  
+   - **Re-run:** Actions → pilih run terakhir → **Re-run all jobs**.
+
+5. **Tunggu 1–2 menit**  
+   Setelah deploy sukses, buka lagi URL (refresh atau buka di tab incognito).
 
 ---
 

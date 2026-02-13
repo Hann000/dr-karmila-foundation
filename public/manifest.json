@@ -1,0 +1,10 @@
+{
+  "name": "DR. KARMILA Foundation",
+  "short_name": "Karmila",
+  "description": "Portal Pendaftaran Bantuan Pendidikan KIP Kuliah & PIP",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a5f",
+  "icons": []
+}

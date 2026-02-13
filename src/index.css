@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+
+
+/* DR. KARMILA Foundation - Brand palette (gaya warna pemerintah: biru + kuning keemasan) */
+:root {
+  /* Kuning keemasan lembut */
+  --karmila-gold: 46 97% 55%;        /* mirip emas / kuning Kementerian RI */
+  --karmila-gold-soft: 46 100% 96%;  /* latar kuning sangat lembut */
+  /* Biru tua resmi (dipakai untuk header, admin bar, tombol utama) */
+  --karmila-sage: 222 47% 29%;       /* mirip biru-700 */
+  --karmila-sage-light: 222 100% 97%;/* biru muda sangat lembut */
+  --karmila-batik-opacity: 0.06;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Motif batik Indonesia - motif di atas, background gelap */
+.bg-batik-gold {
+  background-color: #0f172a;
+  background-image: url("/batik-gold-pattern.png");
+  background-repeat: repeat-x;
+  background-size: auto 120px;
+  background-position: 0 0;
+}
+.bg-batik-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L44 20 L60 8 L52 28 L72 24 L56 40 L72 56 L52 52 L60 72 L44 52 L40 80 L36 52 L20 72 L28 52 L8 56 L24 40 L8 24 L28 28 L20 8 L36 20 Z' fill='%23587b4c' fill-opacity='0.08'/%3E%3Cpath d='M0 40 Q20 20 40 40 Q60 60 80 40' stroke='%23b8860b' stroke-width='.8' fill='none' opacity='0.06'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+.bg-batik-subtle {
+  background-color: hsl(var(--karmila-gold-soft));
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L32 25 L50 15 L38 35 L58 30 L40 45 L58 55 L38 52 L50 70 L32 55 L30 75 L28 55 L10 70 L22 52 L2 55 L20 45 L2 30 L22 35 Z' fill='%23587b4c' fill-opacity='0.05'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Bentuk berliku (kurva organik) */
+.shape-curve {
+  border-radius: 2rem 2rem 1.5rem 1.5rem;
+}
+.shape-curve-lg {
+  border-radius: 2.5rem 2.5rem 2rem 2rem;
+}
+.shape-blob {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+.shape-wave-top {
+  border-radius: 0 0 3rem 3rem;
+}
+.shape-wave-bottom {
+  border-radius: 3rem 3rem 0 0;
+}
+
+/* Animasi halus */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes float-soft {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.85;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  }
+}
+@keyframes batik-shift {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+.animate-float-soft {
+  animation: float-soft 4s ease-in-out infinite;
+}
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+.animate-batik-shift {
+  animation: batik-shift 30s linear infinite;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }

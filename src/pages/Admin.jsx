@@ -80,6 +80,7 @@ export default function Admin() {
   const [filterStatus, setFilterStatus] = useState("");
   const [detailId, setDetailId] = useState(null);
   const [adminNote, setAdminNote] = useState("");
+  const [docPreview, setDocPreview] = useState(null); // { label, filename } | null
   const [periodeModalOpen, setPeriodeModalOpen] = useState(false);
   const [editingPeriod, setEditingPeriod] = useState(null);
   const [formPeriod, setFormPeriod] = useState({
@@ -625,11 +626,11 @@ export default function Admin() {
           {detailRegistration && (
             <>
               <DialogHeader>
-                <DialogTitle>Detail Pendaftaran {detailRegistration.type === "kip" ? "KIP Kuliah" : "PIP"}</DialogTitle>
-                <div className="flex items-center justify-between gap-4 mt-2">
+                <DialogTitle className="text-lg">Detail Pendaftaran {detailRegistration.type === "kip" ? "KIP Kuliah" : "PIP"}</DialogTitle>
+                <div className="flex items-center gap-3 mt-3 flex-wrap">
                   <span className="text-sm text-slate-600">Status:</span>
                   <span
-                    className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${
+                    className={`inline-flex px-3 py-1.5 rounded-md text-sm font-medium ${
                       detailRegistration.status === "disetujui" ? "bg-green-100 text-green-800" :
                       detailRegistration.status === "ditolak" ? "bg-red-100 text-red-800" :
                       detailRegistration.status === "direview" ? "bg-blue-100 text-blue-800" :
@@ -644,7 +645,7 @@ export default function Admin() {
                       updateRegistrationStatus(detailRegistration.id, e.target.value);
                       refresh();
                     }}
-                    className="h-8 rounded-md border border-input px-3 text-sm flex-1 max-w-[140px]"
+                    className="h-9 rounded-md border border-slate-300 px-3 text-sm min-w-[140px] bg-white"
                   >
                     {Object.entries(STATUS_LABELS).map(([k, v]) => (
                       <option key={k} value={k}>{v}</option>
@@ -653,12 +654,12 @@ export default function Admin() {
                 </div>
               </DialogHeader>
 
-              <div className="space-y-6 text-sm">
+              <div className="space-y-6 text-sm pt-1">
                 {detailRegistration.type === "kip" ? (
                   <>
-                    <div>
+                    <div className="pb-4 border-b border-slate-100">
                       <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <User className="w-4 h-4" /> Data Pribadi
+                        <User className="w-4 h-4 text-slate-600" /> Data Pribadi
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Lengkap</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaLengkap || "—"}</dd></div>
@@ -670,9 +671,9 @@ export default function Admin() {
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Email</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.email || "—"}</dd></div>
                       </dl>
                     </div>
-                    <div>
+                    <div className="pb-4 border-b border-slate-100">
                       <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <GraduationCap className="w-4 h-4" /> Data Perguruan Tinggi
+                        <GraduationCap className="w-4 h-4 text-slate-600" /> Data Perguruan Tinggi
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Universitas</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaPerguruanTinggi || "—"}</dd></div>
@@ -688,9 +689,9 @@ export default function Admin() {
                   </>
                 ) : (
                   <>
-                    <div>
+                    <div className="pb-4 border-b border-slate-100">
                       <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <User className="w-4 h-4" /> Data Siswa
+                        <User className="w-4 h-4 text-slate-600" /> Data Siswa
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Lengkap Siswa</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaSiswa || "—"}</dd></div>
@@ -703,9 +704,9 @@ export default function Admin() {
                         <div className="col-span-2"><dt className="text-xs text-slate-500 uppercase tracking-wide">Alamat</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.alamatLengkap || "—"}</dd></div>
                       </dl>
                     </div>
-                    <div>
+                    <div className="pb-4 border-b border-slate-100">
                       <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <Building2 className="w-4 h-4" /> Data Sekolah
+                        <Building2 className="w-4 h-4 text-slate-600" /> Data Sekolah
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Sekolah</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaSekolah || "—"}</dd></div>
@@ -714,9 +715,9 @@ export default function Admin() {
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Kelas</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.kelas || "—"}</dd></div>
                       </dl>
                     </div>
-                    <div>
+                    <div className="pb-4 border-b border-slate-100">
                       <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <Users className="w-4 h-4" /> Data Orang Tua / Wali
+                        <Users className="w-4 h-4 text-slate-600" /> Data Orang Tua / Wali
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Ayah</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaAyah || "—"}</dd></div>
@@ -727,9 +728,9 @@ export default function Admin() {
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Pekerjaan Ibu</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.pekerjaanIbu || "—"}</dd></div>
                       </dl>
                     </div>
-                    <div>
+                    <div className="pb-4 border-b border-slate-100">
                       <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <Wallet className="w-4 h-4" /> Data Ekonomi
+                        <Wallet className="w-4 h-4 text-slate-600" /> Data Ekonomi
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Penghasilan Bulanan</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.penghasilanBulanan || "—"}</dd></div>
@@ -742,16 +743,26 @@ export default function Admin() {
                 )}
 
                 {detailRegistration.files && Object.keys(detailRegistration.files).length > 0 && (
-                  <div>
+                  <div className="pb-4 border-b border-slate-100">
                     <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                      <FileCheck className="w-4 h-4" /> Dokumen
+                      <FileCheck className="w-4 h-4 text-slate-600" /> Dokumen
                     </h4>
-                    <ul className="space-y-2">
+                    <ul className="space-y-3">
                       {Object.entries(detailRegistration.files).flatMap(([key, names]) =>
                         (names || []).map((name) => (
-                          <li key={`${key}-${name}`} className="flex items-center justify-between gap-2 text-slate-700 py-1">
-                            <span>{FILE_LABELS[key] || key}: <span className="text-slate-500">{name}</span></span>
-                            <span className="text-green-600 text-sm font-medium">Lihat Dokumen</span>
+                          <li key={`${key}-${name}`} className="flex items-center justify-between gap-4 py-2 border-b border-slate-100 last:border-0">
+                            <div>
+                              <span className="font-medium text-slate-800">{FILE_LABELS[key] || key}</span>
+                              <span className="text-slate-500 text-sm ml-2">{name}</span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setDocPreview({ label: FILE_LABELS[key] || key, filename: name })}
+                              className="inline-flex items-center gap-1.5 text-green-600 hover:text-green-700 hover:underline text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500/30 rounded"
+                            >
+                              <Download className="w-4 h-4 shrink-0" />
+                              Lihat Dokumen
+                            </button>
                           </li>
                         ))
                       )}
@@ -759,7 +770,7 @@ export default function Admin() {
                   </div>
                 )}
 
-                <div>
+                <div className="pt-1">
                   <h4 className="font-semibold text-slate-800 mb-2">Catatan Admin</h4>
                   <textarea
                     value={adminNote}
@@ -779,6 +790,27 @@ export default function Admin() {
               </div>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal info dokumen (file hanya nama, tidak ada preview dari server) */}
+      <Dialog open={!!docPreview} onOpenChange={(open) => !open && setDocPreview(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base">Info Dokumen</DialogTitle>
+          </DialogHeader>
+          {docPreview && (
+            <div className="space-y-3 text-sm">
+              <p><span className="text-slate-500">Jenis:</span> <span className="font-medium text-slate-800">{docPreview.label}</span></p>
+              <p><span className="text-slate-500">Nama file:</span> <span className="font-medium text-slate-800 break-all">{docPreview.filename}</span></p>
+              <p className="text-slate-600 bg-slate-50 rounded-md p-3">
+                Dalam versi ini dokumen hanya tersimpan di perangkat pendaftar. Preview atau unduh dari admin akan tersedia setelah integrasi backend/penyimpanan file.
+              </p>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDocPreview(null)}>Tutup</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

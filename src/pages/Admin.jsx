@@ -41,9 +41,23 @@ import {
   User,
   Building2,
   FileCheck,
+  Users,
+  Wallet,
 } from "lucide-react";
 
 const ADMIN_PASSWORD = "admin123";
+
+const FILE_LABELS = {
+  skKipKuliah: "SK KIP Kuliah",
+  suratPengantar: "Surat Pengantar",
+  paktaIntegritas: "Pakta Integritas",
+  ktp: "KTP",
+  kartuKeluarga: "Kartu Keluarga",
+  ktpOrtu: "KTP Orang Tua",
+  raporTerakhir: "Rapor Terakhir",
+  sktm: "SKTM",
+  pasFoto: "Pas Foto 3x4",
+};
 
 function formatPeriodDate(dateStr) {
   if (!dateStr) return "-";
@@ -605,91 +619,154 @@ export default function Admin() {
         </DialogContent>
       </Dialog>
 
-      {/* Modal Detail Pendaftaran */}
+      {/* Modal Detail Pendaftaran - layout seperti gambar */}
       <Dialog open={!!detailId} onOpenChange={(open) => !open && setDetailId(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Detail Pendaftaran {detailRegistration?.type === "kip" ? "KIP Kuliah" : "PIP"}</DialogTitle>
-          </DialogHeader>
           {detailRegistration && (
             <>
-              <div className="flex items-center justify-between gap-4 mb-4">
-                <span className="text-sm text-slate-600">Status:</span>
-                <select
-                  value={detailRegistration.status || "menunggu"}
-                  onChange={(e) => {
-                    updateRegistrationStatus(detailRegistration.id, e.target.value);
-                    refresh();
-                  }}
-                  className="h-8 rounded border border-input px-3 text-sm"
-                >
-                  {Object.entries(STATUS_LABELS).map(([k, v]) => (
-                    <option key={k} value={k}>{v}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-4 text-sm">
-                <div>
-                  <h4 className="font-medium text-slate-800 mb-2 flex items-center gap-2">
-                    <User className="w-4 h-4" /> Data Pribadi
-                  </h4>
-                  <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-slate-600">
-                    {detailRegistration.type === "kip" ? (
-                      <>
-                        <dt>Nama</dt><dd>{detailRegistration.data?.namaLengkap || "—"}</dd>
-                        <dt>NIK</dt><dd>{detailRegistration.data?.nik || "—"}</dd>
-                        <dt>Tempat, Tgl Lahir</dt><dd>{[detailRegistration.data?.tempatLahir, detailRegistration.data?.tanggalLahir].filter(Boolean).join(", ") || "—"}</dd>
-                        <dt>Jenis Kelamin</dt><dd>{detailRegistration.data?.jenisKelamin || "—"}</dd>
-                        <dt>Alamat</dt><dd className="col-span-2">{detailRegistration.data?.alamatLengkap || "—"}</dd>
-                        <dt>Telepon</dt><dd>{detailRegistration.data?.telepon || "—"}</dd>
-                        <dt>Email</dt><dd>{detailRegistration.data?.email || "—"}</dd>
-                        <dt>Universitas</dt><dd>{detailRegistration.data?.namaPerguruanTinggi || "—"}</dd>
-                        <dt>Program Studi</dt><dd>{detailRegistration.data?.programStudi || "—"}</dd>
-                        <dt>NIM</dt><dd>{detailRegistration.data?.nim || "—"}</dd>
-                        <dt>Semester</dt><dd>{detailRegistration.data?.semester || "—"}</dd>
-                        <dt>Nomor SK</dt><dd>{detailRegistration.data?.nomorSK || "—"}</dd>
-                        <dt>Bank</dt><dd>{detailRegistration.data?.namaBank || "—"}</dd>
-                        <dt>No. Rekening</dt><dd>{detailRegistration.data?.noRekening || "—"}</dd>
-                        <dt>Atas Nama</dt><dd>{detailRegistration.data?.namaPemilikRekening || "—"}</dd>
-                      </>
-                    ) : (
-                      <>
-                        <dt>Nama Siswa</dt><dd>{detailRegistration.data?.namaSiswa || "—"}</dd>
-                        <dt>NIK</dt><dd>{detailRegistration.data?.nikSiswa || "—"}</dd>
-                        <dt>NISN</dt><dd>{detailRegistration.data?.nisn || "—"}</dd>
-                        <dt>Email</dt><dd>{detailRegistration.data?.email || "—"}</dd>
-                        <dt>Telepon</dt><dd>{detailRegistration.data?.telepon || "—"}</dd>
-                        <dt>Sekolah</dt><dd>{detailRegistration.data?.namaSekolah || "—"}</dd>
-                        <dt>Nama Ayah</dt><dd>{detailRegistration.data?.namaAyah || "—"}</dd>
-                        <dt>Nama Ibu</dt><dd>{detailRegistration.data?.namaIbu || "—"}</dd>
-                      </>
-                    )}
-                  </dl>
+              <DialogHeader>
+                <DialogTitle>Detail Pendaftaran {detailRegistration.type === "kip" ? "KIP Kuliah" : "PIP"}</DialogTitle>
+                <div className="flex items-center justify-between gap-4 mt-2">
+                  <span className="text-sm text-slate-600">Status:</span>
+                  <span
+                    className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${
+                      detailRegistration.status === "disetujui" ? "bg-green-100 text-green-800" :
+                      detailRegistration.status === "ditolak" ? "bg-red-100 text-red-800" :
+                      detailRegistration.status === "direview" ? "bg-blue-100 text-blue-800" :
+                      "bg-amber-100 text-amber-800"
+                    }`}
+                  >
+                    {STATUS_LABELS[detailRegistration.status] || "Menunggu"}
+                  </span>
+                  <select
+                    value={detailRegistration.status || "menunggu"}
+                    onChange={(e) => {
+                      updateRegistrationStatus(detailRegistration.id, e.target.value);
+                      refresh();
+                    }}
+                    className="h-8 rounded-md border border-input px-3 text-sm flex-1 max-w-[140px]"
+                  >
+                    {Object.entries(STATUS_LABELS).map(([k, v]) => (
+                      <option key={k} value={k}>{v}</option>
+                    ))}
+                  </select>
                 </div>
+              </DialogHeader>
+
+              <div className="space-y-6 text-sm">
+                {detailRegistration.type === "kip" ? (
+                  <>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <User className="w-4 h-4" /> Data Pribadi
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Lengkap</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaLengkap || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">NIK</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nik || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Tempat, Tgl Lahir</dt><dd className="font-medium text-slate-800 mt-0.5">{[detailRegistration.data?.tempatLahir, detailRegistration.data?.tanggalLahir].filter(Boolean).join(", ") || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Jenis Kelamin</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.jenisKelamin || "—"}</dd></div>
+                        <div className="col-span-2"><dt className="text-xs text-slate-500 uppercase tracking-wide">Alamat</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.alamatLengkap || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Telepon</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.telepon || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Email</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.email || "—"}</dd></div>
+                      </dl>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <GraduationCap className="w-4 h-4" /> Data Perguruan Tinggi
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Universitas</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaPerguruanTinggi || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Program Studi</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.programStudi || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">NIM</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nim || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Semester</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.semester || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nomor SK</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nomorSK || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Bank</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaBank || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">No. Rekening</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.noRekening || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Atas Nama</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaPemilikRekening || "—"}</dd></div>
+                      </dl>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <User className="w-4 h-4" /> Data Siswa
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Lengkap Siswa</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaSiswa || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">NIK</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nikSiswa || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">NISN</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nisn || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Tempat, Tgl Lahir</dt><dd className="font-medium text-slate-800 mt-0.5">{[detailRegistration.data?.tempatLahir, detailRegistration.data?.tanggalLahir].filter(Boolean).join(", ") || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Jenis Kelamin</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.jenisKelamin || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Telepon</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.telepon || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Email</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.email || "—"}</dd></div>
+                        <div className="col-span-2"><dt className="text-xs text-slate-500 uppercase tracking-wide">Alamat</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.alamatLengkap || "—"}</dd></div>
+                      </dl>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <Building2 className="w-4 h-4" /> Data Sekolah
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Sekolah</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaSekolah || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">NPSN</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.npsn || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Jenjang</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.jenjang || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Kelas</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.kelas || "—"}</dd></div>
+                      </dl>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <Users className="w-4 h-4" /> Data Orang Tua / Wali
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Ayah</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaAyah || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">NIK Ayah</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nikAyah || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Pekerjaan Ayah</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.pekerjaanAyah || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nama Ibu</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.namaIbu || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">NIK Ibu</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nikIbu || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Pekerjaan Ibu</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.pekerjaanIbu || "—"}</dd></div>
+                      </dl>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <Wallet className="w-4 h-4" /> Data Ekonomi
+                      </h4>
+                      <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Penghasilan Bulanan</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.penghasilanBulanan || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nomor KIP</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nomorKIP || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nomor KKS</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nomorKKS || "—"}</dd></div>
+                        <div><dt className="text-xs text-slate-500 uppercase tracking-wide">Nomor PKH</dt><dd className="font-medium text-slate-800 mt-0.5">{detailRegistration.data?.nomorPKH || "—"}</dd></div>
+                      </dl>
+                    </div>
+                  </>
+                )}
+
                 {detailRegistration.files && Object.keys(detailRegistration.files).length > 0 && (
                   <div>
-                    <h4 className="font-medium text-slate-800 mb-2 flex items-center gap-2">
+                    <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
                       <FileCheck className="w-4 h-4" /> Dokumen
                     </h4>
-                    <ul className="space-y-1 text-slate-600">
-                      {Object.entries(detailRegistration.files).flatMap(([label, names]) =>
+                    <ul className="space-y-2">
+                      {Object.entries(detailRegistration.files).flatMap(([key, names]) =>
                         (names || []).map((name) => (
-                          <li key={name}>
-                            {label}: {name} <span className="text-green-600 text-xs">Lihat Dokumen</span>
+                          <li key={`${key}-${name}`} className="flex items-center justify-between gap-2 text-slate-700 py-1">
+                            <span>{FILE_LABELS[key] || key}: <span className="text-slate-500">{name}</span></span>
+                            <span className="text-green-600 text-sm font-medium">Lihat Dokumen</span>
                           </li>
                         ))
                       )}
                     </ul>
                   </div>
                 )}
+
                 <div>
-                  <h4 className="font-medium text-slate-800 mb-2">Catatan Admin</h4>
+                  <h4 className="font-semibold text-slate-800 mb-2">Catatan Admin</h4>
                   <textarea
                     value={adminNote}
                     onChange={(e) => setAdminNote(e.target.value)}
                     placeholder="Tambahkan catatan..."
                     rows={3}
-                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm resize-y"
                   />
                   <Button
                     size="sm"
